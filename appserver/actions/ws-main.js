@@ -80,6 +80,9 @@ module.exports.setup = function setup(scope,options) {
             var tmpMsg = theData.message;
             var tmpUserID = theWS.userid;
             
+            if( !(users[tmpUserID] && users[tmpUserID].profile)){
+                return;
+            }
             //ToDo: add who it is to and vis
             var tmpName = users[tmpUserID].profile.name;
 
