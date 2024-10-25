@@ -137,7 +137,8 @@ module.exports.setup = function setup(scope,options) {
                 sendMeetingRequest(ws,tmpData);
             } else if( tmpData.action == 'meetingresponse'){
                 sendMeetingResponse(ws,tmpData);
-                
+            } else if( tmpData.action == 'ping'){
+                //--- do nothing        
             } else {
                 console.log('unknown action',tmpData.action);
             }
