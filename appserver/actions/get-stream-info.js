@@ -20,10 +20,10 @@ module.exports.setup = function setup(scope) {
         return new Promise( async function (resolve, reject) {
             try {
 
-                var tmpNoStream = '<b>No Stream Running. Come back Sunday at 11 a.m.</b>'
+                var tmpNoStream = '<b>No Stream Running. Come back Sunday morning.</b>'
 
                 var tmpRet = {
-                    streamStatus: true,
+                    streamStatus: false,
                     streamURL: 'https://mongo.hookedup.com/embed/video',
                     noStreamText : tmpNoStream
                 }
