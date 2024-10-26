@@ -23,7 +23,7 @@ module.exports.setup = function setup(scope) {
                 var tmpNoStream = '<b>No Stream Running. Come back Sunday at 11 a.m.</b>'
 
                 var tmpRet = {
-                    streamStatus: false,
+                    streamStatus: true,
                     streamURL: 'https://mongo.hookedup.com/embed/video',
                     noStreamText : tmpNoStream
                 }
