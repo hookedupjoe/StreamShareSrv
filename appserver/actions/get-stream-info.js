@@ -20,10 +20,9 @@ module.exports.setup = function setup(scope) {
         return new Promise( async function (resolve, reject) {
             try {
 
-                var tmpNoStream = '<b>No Stream Running. Come back Sunday morning.</b>'
-
+                var tmpNoStream = '<b>See you next Sunday. Fins Up</b>'
                 var tmpRet = {
-                    streamStatus: true,
+                    streamStatus: false,
                     streamURL: 'https://fans.direct-streamer.com/embed/video',
                     noStreamText : tmpNoStream
                 }
