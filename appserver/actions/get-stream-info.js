@@ -20,12 +20,43 @@ module.exports.setup = function setup(scope) {
         return new Promise( async function (resolve, reject) {
             try {
 
-                var tmpNoStream = '<b>See you next Sunday. Fins Up</b>'
+                var tmpSetup = {
+                    doctype: 'stream',
+                    appid: 'StreamShare',
+                    accountid: '_home',
+                    dbname: '-mo-StreamShare'
+                }
+
+                var tmpAccount = await $.MongoManager.getAccount(tmpSetup.accountid);
+                var tmpDB = await tmpAccount.getDatabase(tmpSetup.dbname);
+                var tmpDocType = tmpSetup.doctype;
+                var tmpMongoDB = tmpDB.getMongoDB();
+                var tmpDocs = await tmpMongoDB.collection($.MongoManager.options.prefix.datatype + tmpDocType).find().filter({__doctype:tmpDocType}).toArray();
+                var tmpRet = {success:true};
+                
+
+                var tmpNoStream = '<b>No Stream Scheduled</b>'
                 var tmpRet = {
                     streamStatus: false,
                     streamURL: 'https://fans.direct-streamer.com/embed/video',
                     noStreamText : tmpNoStream
                 }
+                var tmpDoc = false;
+                if( tmpDocs.length > 0){
+                    //--- for now, assume only one, later loop for active
+                    tmpDoc = tmpDocs[0];
+                    if( tmpDoc.openstatus){
+                        tmpRet.streamStatus = ( tmpDoc.openstatus !== 'Closed' );                       
+                    }
+                    if( tmpDoc.closeddetails ){
+                        tmpRet.noStreamText = tmpDoc.closeddetails;                  
+                    }
+                    if( tmpDoc.streamurl ){
+                        tmpRet.streamURL = tmpDoc.streamurl;                  
+                    }
+                }
+             
+
 
                 resolve(tmpRet);
             }
