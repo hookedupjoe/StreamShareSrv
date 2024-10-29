@@ -19,6 +19,13 @@ module.exports.setup = function setup(scope) {
         var self = this;
         return new Promise( async function (resolve, reject) {
             try {
+                var tmpIsUser = false;
+                var tmpUserID = '';
+                if( req.session && req.session.passport && req.session.passport.user ){
+                    var tmpUserInfo = req.session.passport.user;
+                    tmpIsUser = true;
+                    tmpUserID = tmpUserInfo.provider + '-' + tmpUserInfo.id
+                }
 
                 var tmpSetup = {
                     doctype: 'stream',
@@ -27,17 +34,20 @@ module.exports.setup = function setup(scope) {
                     dbname: '-mo-StreamShare'
                 }
 
+                
+                var tmpAccessLevel = await await $.AuthMgr.getAccessLevelForUser(tmpUserID, {db:tmpSetup.dbname});
+
                 var tmpAccount = await $.MongoManager.getAccount(tmpSetup.accountid);
                 var tmpDB = await tmpAccount.getDatabase(tmpSetup.dbname);
                 var tmpDocType = tmpSetup.doctype;
                 var tmpMongoDB = tmpDB.getMongoDB();
                 var tmpDocs = await tmpMongoDB.collection($.MongoManager.options.prefix.datatype + tmpDocType).find().filter({__doctype:tmpDocType}).toArray();
                 var tmpRet = {success:true};
-                
 
                 var tmpNoStream = '<b>No Stream Scheduled</b>'
                 var tmpRet = {
                     streamStatus: false,
+                    level: tmpAccessLevel,
                     streamURL: 'https://fans.direct-streamer.com/embed/video',
                     noStreamText : tmpNoStream
                 }
