@@ -19,13 +19,6 @@ module.exports.setup = function setup(scope) {
         var self = this;
         return new Promise( async function (resolve, reject) {
             try {
-                var tmpIsUser = false;
-                var tmpUserID = '';
-                if( req.session && req.session.passport && req.session.passport.user ){
-                    var tmpUserInfo = req.session.passport.user;
-                    tmpIsUser = true;
-                    tmpUserID = tmpUserInfo.provider + '-' + tmpUserInfo.id
-                }
 
                 var tmpSetup = {
                     doctype: 'stream',
@@ -35,7 +28,8 @@ module.exports.setup = function setup(scope) {
                 }
 
                 
-                var tmpAccessLevel = await await $.AuthMgr.getAccessLevelForUser(tmpUserID, {db:tmpSetup.dbname});
+                var tmpUserID = $.AuthMgr.getCurrentUserId(req);
+                var tmpAccessLevel = await $.AuthMgr.getAccessLevelForUser(tmpUserID, {db:tmpSetup.dbname});
 
                 var tmpAccount = await $.MongoManager.getAccount(tmpSetup.accountid);
                 var tmpDB = await tmpAccount.getDatabase(tmpSetup.dbname);
