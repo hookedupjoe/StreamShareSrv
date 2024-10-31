@@ -79,6 +79,7 @@ module.exports.setup = function setup(scope,options) {
         try {
             var tmpMsg = theData.message;
             var tmpUserID = theWS.userid;
+            var tmpGroup = theData.group || '';
             
             if( !(users[tmpUserID] && users[tmpUserID].profile)){
                 return;
@@ -96,7 +97,7 @@ module.exports.setup = function setup(scope,options) {
                 wsRoom.sendDataToClient(tmpSocketID, {action:'chat', fromid: tmpUserID, fromname: tmpName, message: tmpMsg, toname: tmpNameTo})
                 wsRoom.sendDataToClient(theWS.id, {action:'chat', fromid: tmpUserID, fromname: tmpName, message: tmpMsg, toname: tmpNameTo})
             } else {
-                wsRoom.sendDataToAll({action:'chat', fromid: tmpUserID, fromname: tmpName, message: tmpMsg, toname: tmpNameTo})
+                wsRoom.sendDataToAll({action:'chat', fromid: tmpUserID, fromname: tmpName, message: tmpMsg, toname: tmpNameTo, group: tmpGroup})
             }
         } catch (error) {
             console.error("Error in send chat",error);
