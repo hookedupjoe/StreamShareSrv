@@ -88,6 +88,7 @@ module.exports.setup = function setup(scope,options) {
             var tmpName = users[tmpUserID].profile.name;
             var tmpColor = users[tmpUserID].profile.color || 'blue';
             var tmpIcon = users[tmpUserID].profile.logo || 'mdi-logo03.png';
+            var tmpHost = users[tmpUserID].profile.host || false;
 
             var tmpNameTo = '';
             if( users[tmpMsg.to] ){
@@ -96,10 +97,10 @@ module.exports.setup = function setup(scope,options) {
                 tmpNameTo = users[tmpMsg.to].profile.name
             }
             if( tmpMsg.to && (tmpMsg.vis == 'private')){
-                wsRoom.sendDataToClient(tmpSocketID, {action:'chat', fromid: tmpUserID, fromcolor: tmpColor, fromicon: tmpIcon, fromname: tmpName, message: tmpMsg, toname: tmpNameTo})
-                wsRoom.sendDataToClient(theWS.id, {action:'chat', fromid: tmpUserID, fromcolor: tmpColor, fromicon: tmpIcon, fromname: tmpName, message: tmpMsg, toname: tmpNameTo})
+                wsRoom.sendDataToClient(tmpSocketID, {action:'chat', host: tmpHost, fromid: tmpUserID, fromcolor: tmpColor, fromicon: tmpIcon, fromname: tmpName, message: tmpMsg, toname: tmpNameTo})
+                wsRoom.sendDataToClient(theWS.id, {action:'chat', host: tmpHost, fromid: tmpUserID, fromcolor: tmpColor, fromicon: tmpIcon, fromname: tmpName, message: tmpMsg, toname: tmpNameTo})
             } else {
-                wsRoom.sendDataToAll({action:'chat', fromid: tmpUserID, fromcolor: tmpColor, fromicon: tmpIcon, fromname: tmpName, message: tmpMsg, toname: tmpNameTo, group: tmpGroup})
+                wsRoom.sendDataToAll({action:'chat', host: tmpHost, fromid: tmpUserID, fromcolor: tmpColor, fromicon: tmpIcon, fromname: tmpName, message: tmpMsg, toname: tmpNameTo, group: tmpGroup})
             }
         } catch (error) {
             console.error("Error in send chat",error);
