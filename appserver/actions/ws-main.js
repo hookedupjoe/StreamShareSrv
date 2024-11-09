@@ -25,9 +25,12 @@ module.exports.setup = function setup(scope,options) {
             if( tmpPerson.profile && tmpPerson.socketid ){
                 var tmpName = tmpPerson.profile.name || 'Anonymous';
                 var tmpUserID = tmpPerson.userid || 'Anonymous';
-                tmpList[aID] = {name:tmpName, userid: tmpUserID};
+                var tmpLogo = tmpPerson.profile.logo || 'mdi-logo06.png';
+                var tmpColor = tmpPerson.profile.color || 'teal';
+                tmpList[aID] = {name:tmpName, userid: tmpUserID, color: tmpColor, logo: tmpLogo};
             }
         }
+        console.log('people',tmpList)
         return tmpList;
     }    
 
@@ -86,6 +89,8 @@ module.exports.setup = function setup(scope,options) {
             }
             //ToDo: add who it is to and vis
             var tmpName = users[tmpUserID].profile.name;
+            var tmpColor = users[tmpUserID].profile.color || 'blue';
+            var tmpIcon = users[tmpUserID].profile.logo || 'mdi-logo03.png';
 
             var tmpNameTo = '';
             if( users[tmpMsg.to] ){
@@ -94,10 +99,10 @@ module.exports.setup = function setup(scope,options) {
                 tmpNameTo = users[tmpMsg.to].profile.name
             }
             if( tmpMsg.to && (tmpMsg.vis == 'private')){
-                wsRoom.sendDataToClient(tmpSocketID, {action:'chat', fromid: tmpUserID, fromname: tmpName, message: tmpMsg, toname: tmpNameTo})
-                wsRoom.sendDataToClient(theWS.id, {action:'chat', fromid: tmpUserID, fromname: tmpName, message: tmpMsg, toname: tmpNameTo})
+                wsRoom.sendDataToClient(tmpSocketID, {action:'chat', fromid: tmpUserID, fromcolor: tmpColor, fromicon: tmpIcon, fromname: tmpName, message: tmpMsg, toname: tmpNameTo})
+                wsRoom.sendDataToClient(theWS.id, {action:'chat', fromid: tmpUserID, fromcolor: tmpColor, fromicon: tmpIcon, fromname: tmpName, message: tmpMsg, toname: tmpNameTo})
             } else {
-                wsRoom.sendDataToAll({action:'chat', fromid: tmpUserID, fromname: tmpName, message: tmpMsg, toname: tmpNameTo, group: tmpGroup})
+                wsRoom.sendDataToAll({action:'chat', fromid: tmpUserID, fromcolor: tmpColor, fromicon: tmpIcon, fromname: tmpName, message: tmpMsg, toname: tmpNameTo, group: tmpGroup})
             }
         } catch (error) {
             console.error("Error in send chat",error);
@@ -109,7 +114,6 @@ module.exports.setup = function setup(scope,options) {
         var tmpUserID = theData.userid;
         var tmpProfile = theData.profile;
         theWS.userid = tmpUserID;
-
         users[tmpUserID] = {
             socketid: tmpSocketID,
             userid: tmpUserID,
