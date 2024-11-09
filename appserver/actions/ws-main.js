@@ -87,7 +87,7 @@ module.exports.setup = function setup(scope,options) {
             //ToDo: add who it is to and vis
             var tmpName = users[tmpUserID].profile.name;
             var tmpColor = users[tmpUserID].profile.color || 'blue';
-            var tmpIcon = users[tmpUserID].profile.logo || 'mdi-logo03.png';
+            var tmpIcon = users[tmpUserID].profile.logo || 'default.png';
             var tmpHost = users[tmpUserID].profile.host || false;
 
             var tmpNameTo = '';
@@ -112,6 +112,7 @@ module.exports.setup = function setup(scope,options) {
         var tmpUserID = theData.userid;
         var tmpProfile = theData.profile;
         theWS.userid = tmpUserID;
+        
         users[tmpUserID] = {
             socketid: tmpSocketID,
             userid: tmpUserID,
@@ -191,6 +192,7 @@ module.exports.setup = function setup(scope,options) {
         var self = this;
         return new Promise( async function (resolve, reject) {
             try {
+                
                 var tmpRet = {
                     status: true,
                     query:req.query
