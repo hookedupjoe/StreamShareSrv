@@ -45,19 +45,48 @@ module.exports.setup = function setup(scope) {
                     streamURL: 'https://fans.direct-streamer.com/embed/video',
                     noStreamText : tmpNoStream
                 }
+
                 var tmpDoc = false;
+                var tmpActiveDocs = [];
+                var tmpPrimaryDoc = false;
+                var tmpStreamIndex = {};
+                tmpRet.streamCount = 0;
+
                 if( tmpDocs.length > 0){
-                    //--- for now, assume only one, later loop for active
-                    tmpDoc = tmpDocs[0];
-                    if( tmpDoc.openstatus){
-                        tmpRet.streamStatus = ( tmpDoc.openstatus !== 'Closed' );                       
+                    if( tmpDocs.length == 1){
+                        tmpDoc = tmpDocs[0];
+                    } else {
+                        for( var iKey in tmpDocs ){
+                            var tmpADoc = tmpDocs[iKey];
+                            if( tmpADoc.status == "Active" ){
+                                if( tmpADoc.streamtype == 'Primary' ){
+                                    tmpPrimaryDoc = tmpADoc;
+                                    tmpRet.defaultStream = tmpADoc.name;
+                                }
+                                tmpActiveDocs.push(tmpADoc);
+                                tmpStreamIndex[tmpADoc.name] = tmpADoc;
+                                tmpRet.streamCount++;
+                            }
+                        }
+                        if( tmpActiveDocs.length == 1 ){
+                            tmpDoc = tmpActiveDocs[0];
+                        }
+                        if( tmpPrimaryDoc ){
+                            tmpDoc = tmpPrimaryDoc;
+                        }
+
                     }
-                    if( tmpDoc.closeddetails ){
-                        tmpRet.noStreamText = tmpDoc.closeddetails;                  
+                    if( tmpDoc ){
+                        if( tmpDoc.openstatus){
+                            tmpRet.streamStatus = true;                       
+                        }
+                        if( tmpDoc.streamurl ){
+                            tmpRet.streamURL = tmpDoc.streamurl;                  
+                        }
                     }
-                    if( tmpDoc.streamurl ){
-                        tmpRet.streamURL = tmpDoc.streamurl;                  
-                    }
+
+                    tmpRet.streamIndex = tmpStreamIndex;
+                    //tmpRet.activeStreams = tmpActiveDocs;
                 }
              
 
