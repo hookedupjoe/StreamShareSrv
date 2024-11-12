@@ -1,7 +1,7 @@
 'use strict';
 
-const THIS_MODULE_NAME = 'run-test';
-const THIS_MODULE_TITLE = 'Test that the API works';
+const THIS_MODULE_NAME = 'get-stream-info';
+const THIS_MODULE_TITLE = 'Get Currently Active Stream Details';
 
 module.exports.setup = function setup(scope) {
     var config = scope;
@@ -26,7 +26,6 @@ module.exports.setup = function setup(scope) {
                     accountid: '_home',
                     dbname: '-mo-StreamShare'
                 }
-
                 
                 var tmpUserID = $.AuthMgr.getCurrentUserId(req);
                 var tmpAccessLevel = await $.AuthMgr.getAccessLevelForUser(tmpUserID, {db:tmpSetup.dbname});
@@ -42,7 +41,7 @@ module.exports.setup = function setup(scope) {
                 var tmpRet = {
                     streamStatus: false,
                     level: tmpAccessLevel,
-                    streamURL: 'https://fans.direct-streamer.com/embed/video',
+                    streamURL: '',
                     noStreamText : tmpNoStream
                 }
 
@@ -86,7 +85,6 @@ module.exports.setup = function setup(scope) {
                     }
 
                     tmpRet.streamIndex = tmpStreamIndex;
-                    //tmpRet.activeStreams = tmpActiveDocs;
                 }
              
 

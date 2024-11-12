@@ -11,7 +11,6 @@ var users = {};
 module.exports.setup = function setup(scope,options) {
     var config = scope;
     var $ = config.locals.$;
-    // var OPEN_STATE = $.ws.WebSocket.OPEN;
 
     function Route() {
         this.name = THIS_MODULE_NAME;
@@ -37,44 +36,6 @@ module.exports.setup = function setup(scope,options) {
         wsRoom.sendDataToAll({action:'people', people: getPeopleSummary()});
     }
 
-    function sendMeetingResponse(theWS, theData){
-        var tmpMsg = theData.message || {};
-        
-        var tmpName = '';
-        //--- User ID of person making the reply
-        var tmpUserID = theWS.userid;
-        if( users[tmpUserID] ){
-            tmpName = users[tmpUserID].profile.name
-        }
-
-        if( users[tmpMsg.from] ){
-            var tmpUser = users[tmpMsg.from];
-            var tmpSocketID = tmpUser.socketid;
-            wsRoom.sendDataToClient(tmpSocketID, {action:'meetingresponse', answer: theData.answer, fromid: tmpUserID, fromname: tmpName, message: tmpMsg})
-        } else {
-            console.log('unknown user',tmpMsg)
-        }
-
-        
-    }
-    
-    function sendMeetingRequest(theWS, theData){
-        var tmpName = '';
-        var tmpUserID = theWS.userid;
-        if( users[tmpUserID] ){
-            tmpName = users[tmpUserID].profile.name
-        }
-
-        if( users[theData.to] ){
-            var tmpUser = users[theData.to];
-            var tmpSocketID = tmpUser.socketid;
-            wsRoom.sendDataToClient(tmpSocketID, {action:'meetingrequest', offer: theData.offer, fromid: theWS.userid, fromname: tmpName, message: 'Meeting request from ' + tmpName})
-        } else {
-            wsRoom.sendDataToClient(theWS.id, {action:'meetingreply', fromid: theWS.userid, status: false, message: 'No longer available'})  
-        }
-
-    }
-    
     function sendChat(theWS, theData){
         try {
             var tmpMsg = theData.message;
@@ -84,7 +45,7 @@ module.exports.setup = function setup(scope,options) {
             if( !(users[tmpUserID] && users[tmpUserID].profile)){
                 return;
             }
-            //ToDo: add who it is to and vis
+
             var tmpName = users[tmpUserID].profile.name;
             var tmpColor = users[tmpUserID].profile.color || 'blue';
             var tmpIcon = users[tmpUserID].profile.logo || 'default.png';
@@ -140,10 +101,6 @@ module.exports.setup = function setup(scope,options) {
                 updateProfile(ws,tmpData);
             } else if( tmpData.action == 'chat'){
                 sendChat(ws,tmpData);
-            } else if( tmpData.action == 'meeting'){
-                sendMeetingRequest(ws,tmpData);
-            } else if( tmpData.action == 'meetingresponse'){
-                sendMeetingResponse(ws,tmpData);
             } else if( tmpData.action == 'ping'){
                 //--- do nothing        
             } else {
