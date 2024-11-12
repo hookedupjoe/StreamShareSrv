@@ -1,4 +1,4 @@
-# StreamShare - UI Application
+# StreamShare - Server Side Application
 A Demo Application that uses database, security and WebSockets.
 
 * Author - W Joseph Francis
